@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <script>
+        function setTextArea(text) {
+            document.getElementById("response").value = JSON.stringify(JSON.parse(text), null, 2);
+        }
+
+        function httpGetAsync(app, callback)
+        {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    callback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", '/obo/'+app, true); // true for asynchronous
+            xmlHttp.send(null);
+        }
+    </script>
+    <div>
+        <form>
+            <label for="appname">App:</label>
+            <input type="text" id="appname" name="appname">
+        </form>
+        <button onclick="httpGetAsync(document.getElementById('appname').value, (response) => setTextArea(response))">execute</button><br>
+        <textarea id="response"></textarea>
+    </div>
+</html>
