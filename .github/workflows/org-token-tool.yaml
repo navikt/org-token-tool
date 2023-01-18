@@ -27,6 +27,19 @@ jobs:
           push: true
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
 
+  deploy-dev:
+    name: Deploy dev-gcp
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/org-token-tool-dev.yaml
+
   deploy-prod:
     name: Deploy prod-gcp
     needs: build
@@ -38,4 +51,4 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
-          RESOURCE: .nais/org-token-tool.yaml
+          RESOURCE: .nais/org-token-tool-prod.yaml
