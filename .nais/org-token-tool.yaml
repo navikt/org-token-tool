@@ -1,26 +1,26 @@
 apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+kind: Application
 metadata:
-  name: "org-token-tool"
-  namespace: "org"
+  name: org-token-tool
+  namespace: org
   labels:
-    "team": "team org"
+    team: org
 spec:
   image: {{image}}
   port: 3000
   ingresses:
-    - "https://org-token-tool.intern.nav.no"
+    - https://org-token-tool.intern.nav.no
   replicas:
     min: 1
     max: 1
     cpuThresholdPercentage: 50
   resources:
     limits:
-      cpu: "200m"
-      memory: "256Mi"
+      cpu: 200m
+      memory: 256Mi
     requests:
-      cpu: "200m"
-      memory: "256Mi"
+      cpu: 200m
+      memory: 256Mi
   liveness:
     path: /internal/health/liveness
     initialDelay: 10
@@ -33,7 +33,7 @@ spec:
     failureThreshold: 30
   env:
     - name: NODE_ENV
-      value: "production"
+      value: production
   azure:
     application:
       enabled: true
