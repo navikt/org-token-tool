@@ -31,9 +31,6 @@ spec:
     initialDelay: 10
     periodSeconds: 5
     failureThreshold: 30
-  prometheus:
-    enabled: true
-    path: /internal/prometheus
   env:
     - name: NODE_ENV
       value: "production"
