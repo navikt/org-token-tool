@@ -18,7 +18,7 @@
 <script>
     function fetchToken() {
         var scope = document.getElementById("scope").value;
-        fetch("http://localhost:3000/obo/" + scope, {
+        fetch("/obo/" + scope, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
