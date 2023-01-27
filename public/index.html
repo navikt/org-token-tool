@@ -1,27 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <script>
-        function setTextArea(text) {
-            document.getElementById("response").value = JSON.stringify(JSON.parse(text), null, 2);
-        }
-
-        function httpGetAsync(app, callback)
-        {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                    callback(xmlHttp.responseText);
+<head>
+    <title>Bearer Token Fetcher</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<form>
+    <label for="scope">Scope:</label>
+    <input type="text" id="scope" name="scope">
+    <br><br>
+    <button type="button" onclick="fetchToken()">Fetch Token</button>
+</form>
+<br>
+<pre id="result"></pre>
+<div id="countdown"></div>
+<button id="copy-button" style="display:none" onclick="copyToClipboard()">Copy Access Token</button>
+<script>
+    function fetchToken() {
+        var scope = document.getElementById("scope").value;
+        fetch("http://localhost:3000/obo/" + scope, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
             }
-            xmlHttp.open("GET", '/obo/'+app, true); // true for asynchronous
-            xmlHttp.send(null);
-        }
-    </script>
-    <div>
-        <form>
-            <label for="appname">App:</label>
-            <input type="text" id="appname" name="appname">
-        </form>
-        <button onclick="httpGetAsync(document.getElementById('appname').value, (response) => setTextArea(response))">execute</button><br>
-        <textarea id="response"></textarea>
-    </div>
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+                document.getElementById("copy-button").style.display = "block";
+                var expiresIn = data.expires_in;
+                startCountdown(expiresIn);
+            });
+    }
+    function copyToClipboard() {
+        var copyText = document.getElementById("result").innerText;
+        var parsed = JSON.parse(copyText);
+        copyText = parsed.access_token;
+        navigator.clipboard.writeText(copyText).then(function() {
+            alert("Token copied to clipboard");
+        }, function(err) {
+            alert("Failed to copy token: " + err);
+        });
+    }
+
+    let intervalId;
+    function startCountdown(expiresIn) {
+        var countdown = document.getElementById("countdown");
+        clearInterval(intervalId); // Clear previous interval
+        intervalId = setInterval(function() {
+            expiresIn--;
+            var minutes = Math.floor(expiresIn / 60);
+            var seconds = expiresIn % 60;
+            countdown.innerHTML = "Token expires in " + minutes + " minutes " + seconds + " seconds";
+            if (expiresIn === 0) {
+                clearInterval(intervalId);
+                countdown.innerHTML = "Token expired";
+            }
+        }, 1000);
+    }
+</script>
+</body>
 </html>
+
+
+
+
