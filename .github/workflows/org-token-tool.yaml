@@ -25,7 +25,7 @@ jobs:
         id: docker-push
         with:
           team: org
-          image_suffix: norgcron
+          image_suffix: token-tool
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
     outputs:
