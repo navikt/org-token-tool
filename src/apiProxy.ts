@@ -57,7 +57,7 @@ export async function getOboToken(userAccessToken: string, scope: string) {
     console.log("Requested new access token");
     return onBehalfOfResponse.data;
   } catch (error) {
-    console.log("error", error);
-    return error
+    console.error("Error occurred while requesting new access token:", error);
+    return { error: "An error occurred while processing your request. Please try again later." };
   }
 }
