@@ -7,11 +7,11 @@ const routes = Router();
 export const helloWorldRoute = routes.get('/obo/:app',
     verifyJWTToken,
     async (req, res) => {
-        const tokenResponse = await getOboToken(getTokenFromRequestHeader(req), req.params.app);
-        if (tokenResponse.error) {
-            res.status(500).send(tokenResponse.error);
-        } else {
+        try {
+            const tokenResponse = await getOboToken(getTokenFromRequestHeader(req), req.params.app);
             res.send(tokenResponse);
+        } catch (error) {
+            res.status(500).send(error);
         }
 });
 
