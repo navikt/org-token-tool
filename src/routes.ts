@@ -11,7 +11,8 @@ export const helloWorldRoute = routes.get('/obo/:app',
             const tokenResponse = await getOboToken(getTokenFromRequestHeader(req), req.params.app);
             res.send(tokenResponse);
         } catch (error) {
-            res.status(500).send(error);
+            console.error("Error occurred:", error.stack || error); // Log the error details on the server
+            res.status(500).send("An internal server error occurred."); // Send a generic error message to the client
         }
 });
 
