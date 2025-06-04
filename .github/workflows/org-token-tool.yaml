@@ -8,25 +8,32 @@ on:
 
 jobs:
   build:
-    name: Build and push docker, org-token-tool
-    runs-on: ubuntu-latest
+    name: "Build app and push docker image to GAR"
     permissions:
-      contents: read
-      id-token: write
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Docker login
-        uses: docker/login-action@v3
+      - uses: actions/setup-node@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '24'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+
+      - name: Install webapp dependencies
+        run: yarn install
+
+      - name: Build webapp
+        run: yarn build
+
       - name: Build and push Docker image
         uses: nais/docker-build-push@v0
         id: docker-push
         with:
           team: org
-          image_suffix: token-tool
+          image_suffix: nom-ui2
+          dockerfile: Dockerfile
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
     outputs:
