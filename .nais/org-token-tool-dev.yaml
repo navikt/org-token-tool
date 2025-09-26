@@ -46,3 +46,9 @@ spec:
     sidecar:
       enabled: true
       autoLogin: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: nom-api
+          namespace: nom
+          cluster: dev-gcp
