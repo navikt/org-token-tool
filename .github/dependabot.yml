@@ -10,11 +10,15 @@ updates:
     schedule:
       interval: daily
       time: "04:00"
+    cooldown:
+      default-days: 3
+
   - package-ecosystem: docker
     directory: "/"
     schedule:
       interval: daily
       time: "04:00"
+
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
