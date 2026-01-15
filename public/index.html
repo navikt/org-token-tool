@@ -1,67 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Bearer Token Fetcher</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-<form>
+<form onsubmit="handleSubmit();return false">
     <label for="scope">Scope:</label>
     <input type="text" id="scope" name="scope" placeholder="<cluster>.<namespace>.<app name>">
     <br><br>
-    <button type="button" onclick="fetchToken()">Fetch Token</button>
+    <button>Fetch Token</button>
 </form>
 <br>
-<div id="countdown"></div>
-<pre id="result"></pre>
-<button id="copy-button" style="display:none" onclick="copyToClipboard()">Copy Access Token</button>
+<div id="container">
+    <div id="count"></div>
+    <pre id="result"></pre>
+    <button id="copy-button" onclick="copyToClipboard()">Copy Access Token</button>
+</div>
 <script>
-    function fetchToken() {
-        var scope = document.getElementById("scope").value;
-        fetch("/obo/" + scope, {
+    let state = {
+        intervalId: null,
+        token: null,
+    }
+
+    function reset(resultText){
+        clearInterval(state.intervalId);
+        state.token = null;
+        document.getElementById("count").innerHTML = "";
+        document.getElementById("copy-button").style.display = "none";
+        document.getElementById("result").innerText = resultText;
+    }
+
+    function handleSubmit() {
+        reset("...waiting...");
+        let scopeInput = document.getElementById("scope").value;
+        fetchToken(scopeInput).then(res => {
+                if (res.ok) {
+                    state.token = res.token;
+                    showToken(res.token, scopeInput);
+                } else{
+                    showError(res.err);
+                }
+            }
+        );
+    }
+
+    function showToken(tokenStr, scopeInput){
+        document.getElementById("result").innerText = JSON.stringify({scope: scopeInput, token: tokenStr },null,2);
+        document.getElementById("copy-button").style.display = "block";
+        startCount(new Date());
+    }
+
+    function showError(err){
+        document.getElementById("result").innerText = err
+    }
+
+    function fetchToken(scope) {
+        return fetch("/obo/" + scope, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("result").innerText = JSON.stringify(data, null, 2);
-                document.getElementById("copy-button").style.display = "block";
-                var expiresIn = data.expires_in;
-                startCountdown(expiresIn);
-            });
-    }
-    function copyToClipboard() {
-        var copyText = document.getElementById("result").innerText;
-        var parsed = JSON.parse(copyText);
-        copyText = parsed.access_token;
-        navigator.clipboard.writeText(copyText).then(function() {
-            alert("Token copied to clipboard");
-        }, function(err) {
-            alert("Failed to copy token: " + err);
-        });
+        }).then(response => {
+            if (response.status === 200) {
+                return response.text().then(
+                    tokenText => {
+                        return {ok: true, token: tokenText};
+                    }).catch(err => ({ok: false, err: err}));
+            } else {
+                return {ok: false, err: "Bad status: " + response.status}
+            }
+        }).catch(err => ({ok: false, err: err}));
     }
 
-    let intervalId;
-    function startCountdown(expiresIn) {
-        var countdown = document.getElementById("countdown");
-        clearInterval(intervalId); // Clear previous interval
-        intervalId = setInterval(function() {
-            expiresIn--;
-            var minutes = Math.floor(expiresIn / 60);
-            var seconds = expiresIn % 60;
-            countdown.innerHTML = "Token expires in " + minutes + " minutes " + seconds + " seconds";
-            if (expiresIn === 0) {
-                clearInterval(intervalId);
-                countdown.innerHTML = "Token expired";
-            }
+    function copyToClipboard() {
+        if(state.token){
+            navigator.clipboard.writeText(state.token).then(function () {
+                alert("Token copied to clipboard");
+            }, function (err) {
+                alert("Failed to copy token: " + err);
+            });
+        }else{
+            alert("No token to copy");
+        }
+    }
+
+    function startCount(refDate) {
+        let countElement = document.getElementById("count");
+        clearInterval(state.intervalId);
+        state.intervalId = setInterval(function () {
+
+            let diffSeconds = Math.floor((new Date() - refDate)/1000);
+            let minutes = Math.floor(diffSeconds / 60);
+            let seconds = diffSeconds % 60;
+            countElement.innerHTML = "Token age: " + minutes + " minutes " + seconds + " seconds";
         }, 1000);
     }
+
+    // initialize
+    reset("");
 </script>
 </body>
 </html>
-
-
-
-

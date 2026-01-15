@@ -24,6 +24,8 @@ jobs:
 
       - name: Install webapp dependencies
         run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Build webapp
         run: npm run build

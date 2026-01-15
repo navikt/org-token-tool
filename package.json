@@ -5,25 +5,19 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --project ./",
-    "start:dev": "nodemon src/server.ts",
     "start:prod": "node dist/server.js"
   },
   "dependencies": {
+    "express": "5.2.1",
+    "uuid": "13.0.0",
+    "@navikt/oasis": "4.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
     "@types/express": "^5.0.3",
     "@types/node": "^22.15.29",
     "@types/node-jose": "^1.1.10",
-    "@types/uuid": "^10.0.0",
-    "axios": "^1.8.2",
-    "express": "^5.1.0",
-    "express-jwt": "^8.5.1",
-    "jwks-rsa": "^3.2.0",
-    "node-jose": "^2.2.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.3",
-    "uuid": "^11.0.5"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/uuid": "^10.0.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
