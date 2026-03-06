@@ -15,7 +15,7 @@
   "devDependencies": {
     "typescript": "^5.7.3",
     "@types/express": "^5.0.3",
-    "@types/node": "^22.15.29",
+    "@types/node": "^25.3.3",
     "@types/node-jose": "^1.1.10",
     "@types/uuid": "^10.0.0"
   },
