@@ -10,7 +10,7 @@
   "dependencies": {
     "express": "5.2.1",
     "uuid": "13.0.0",
-    "@navikt/oasis": "4.1.1"
+    "@navikt/oasis": "4.1.4"
   },
   "devDependencies": {
     "typescript": "^5.7.3",
