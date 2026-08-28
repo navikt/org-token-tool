@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/nodejs24-debian12:nonroot
+FROM gcr.io/distroless/nodejs24-debian13:nonroot
 ENV NODE_ENV=production
 
 COPY node_modules /node_modules/
