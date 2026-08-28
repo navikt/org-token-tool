@@ -2,8 +2,8 @@ import express from "express";
 import {getToken, requestOboToken, validateToken} from "@navikt/oasis";
 
 export const tokenFromRequest = async (req: express.Request, audience: string) => {
-  const bearerToken = req.header("Authorization").split(" ")[1];
-  const token = getToken(bearerToken);
+  const bearerToken = req.header("Authorization")?.split(" ")[1];
+  const token = bearerToken ? getToken(bearerToken) : null;
   if (!token) {
     throw new Error("Missing token");
   }
