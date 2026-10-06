@@ -10,4 +10,4 @@ COPY public/ /public/
 WORKDIR /
 
 EXPOSE 3000
-ENTRYPOINT ["/nodejs/bin/node", "dist/server.js"]
+ENTRYPOINT ["/usr/bin/node", "dist/server.js"]
