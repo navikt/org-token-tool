@@ -32,7 +32,7 @@ jobs:
         run: npm run build
 
       - name: Build and push Docker image
-        uses: nais/docker-build-push@078e460885ed0424b60d45ce9220b4be1748be9d # ratchet:nais/docker-build-push@v0
+        uses: nais/docker-build-push@d3a1f7e259ecc381a50435e1d4add9059429ebd7 # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: org
